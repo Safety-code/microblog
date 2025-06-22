@@ -3,6 +3,7 @@ from app import app
 from app.forms import LoginForm
 from flask import flash, redirect, url_for
 
+#main/home page
 @app.route('/')
 @app.route('/index')
 def index():
@@ -19,7 +20,7 @@ def index():
     ]
     return render_template('index.html', title='Home', user=user, posts=posts)
 
-
+#login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -27,4 +28,9 @@ def login():
         flash('Login requested for user {}, remember_me={}'.format(
             form.username.data, form.remember_me.data))
         return redirect(url_for('index'))
-    return render_template('login.html', title='Sign In', form=form)    
+    return render_template('login.html', title='Sign In', form=form)   
+
+#About page
+@app.route('/about')
+def about():
+    return render_template('about.html', title='About')

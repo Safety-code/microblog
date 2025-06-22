@@ -8,12 +8,14 @@
     {% else %}
     <title>Welcome to Microblog</title>
     {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div>
         Microblog: 
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ urk_for('about')}}">About</a>
     </div>
     <hr>
     {% with messages = get_flashed_messages() %}
@@ -26,5 +28,9 @@
     {% endif %}
     {% endwith %}
     {% block content %}{% endblock %}
+    <hr>
+    <footer>
+        <p>&copy; 2025 Joseph Mensah</p>
+    </footer>
 </body>
 </html>
