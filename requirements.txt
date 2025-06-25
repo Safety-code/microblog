@@ -1,5 +1,5 @@
 pip install flask
 pip install "flask<3" "werkzeug<3"
 pip install python-dotenv
- pip install flask-wtf
+pip install flask-wtf
 pip install flask-sqlalchemy

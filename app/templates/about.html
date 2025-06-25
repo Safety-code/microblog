@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% extends "base.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About</title>
+</head>
+<body>
+    {% block content %}
+    <h1>About Microblog</h1>
+    <p>Microblog is a simple web application for sharing your thoughts with the world.</p>
+    <p>Created as a demonstration project using Flask.</p>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+    {% endblock %}
+    
+</body>
+</html>
