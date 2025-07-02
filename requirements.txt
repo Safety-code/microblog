@@ -1,5 +1,7 @@
-pip install flask
-pip install "flask<3" "werkzeug<3"
-pip install python-dotenv
-pip install flask-wtf
-pip install flask-sqlalchemy
+ install flask
+ install "flask<3" "werkzeug<3"
+ install python-dotenv
+ install flask-wtf
+ install flask-sqlalchemy
+ install flask-migrate
+ install flask-login
