@@ -5,6 +5,7 @@ from flask import flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app.models import User
+#from app import posts  # Assuming posts is defined in app/__init__.py
 from app import db
 from urllib.parse import urlsplit
 
@@ -14,7 +15,10 @@ from urllib.parse import urlsplit
 @app.route('/index')
 @login_required  #protects login view function against anonymous users
 def index():
-    return render_template('index.html', title='Home Page', posts=posts)
+    posts = {
+
+    }
+    return render_template("index.html", title='Home Page', posts=posts)
 
 #login page and user authentication
 @app.route('/login', methods=['GET', 'POST'])
@@ -32,6 +36,8 @@ def login():
         if not next_page or urlsplit(next_page).netloc !='':
             next_page = url_for('index')
         return redirect(next_page)
+    
+
 #logout page
 @app.route('/logout')
 def logout():

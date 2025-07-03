@@ -5,3 +5,4 @@
  install flask-sqlalchemy
  install flask-migrate
  install flask-login
+ install email-validator
