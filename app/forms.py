@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import sqlalchemy as sa
 from app import db
 from app.models import User
@@ -16,9 +16,11 @@ class LoginForm(FlaskForm):
 #registration form
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()] )
-    email = StringField('Email', validators=[DataRequired, Email()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    password_2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')], submit = SubmitField('Register'))
+    password_2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
 
     #username validation
     def validate_username(self, username):    
