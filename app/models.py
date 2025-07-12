@@ -6,6 +6,7 @@ import sqlalchemy.orm as so
 from app import db
 from flask_login import UserMixin
 from app import login
+from hashlib import md5
 
 
 #The user daatabase model and Usermixin
@@ -14,7 +15,14 @@ class User(UserMixin, db.Model):
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
-    posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author') 
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(default=lambda:datetime.now(timezone.utc))
+
+    #adding an avatar
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return f"https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}"
 
 
     #user-loader function
@@ -45,7 +53,6 @@ class Post(db.Model):
     
     def __repr__(self):
         return '<Post: {}>'.format(self.body)
-    
-# #usermixin class
-# class User(UserMixin, db.Model):
+   
+
 

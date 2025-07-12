@@ -6,3 +6,4 @@
  install flask-migrate
  install flask-login
  install email-validator
+ pip install aiosmtpd
