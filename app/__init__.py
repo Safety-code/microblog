@@ -40,7 +40,7 @@ if not app.debug:
         os.mkdir('logs')
     file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240, backupCount=10)
     file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s:%(message)s [in %(pathname)s:%(line)d]'))
+        '%(asctime)s - %(levelname)s:%(message)s - [in %(pathname)s:%(line)d]'))
     file_handler.setLevel(logging.INFO)
     file_handler.setLevel(logging.ERROR)
     app.logger.addHandler(file_handler)
