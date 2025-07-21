@@ -1,11 +1,11 @@
 from flask import render_template, request
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, EmptyForms, PostForm
 from app.forms import RegistrationForm, EditProfileForm
 from flask import flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
-from app.models import User
+from app.models import User, Post
 from app import db
 from urllib.parse import urlsplit
 from datetime import timezone, datetime
@@ -21,11 +21,20 @@ def before_request():
 
 #VIEW FUNCTIONS
 #main/home page
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required  #protects login view function against anonymous users
 def index():
-    return render_template("index.html", title='Home Page')
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash("Your post is now live!")
+        return redirect(url_for("index"))
+    posts = db.session.scalars(current_user.following_posts()).all()
+    return render_template("index.html", title='Home Page', posts=posts)
+
 
 #login page and user authentication
 @app.route('/login', methods=['GET', 'POST'])
@@ -78,12 +87,13 @@ def about():
 @app.route('/user/<username>')
 @login_required
 def user(username):
+    form = EmptyForms()
     user = db.first_or_404(sa.select(User).where(User.username == username))
     posts = [
         {'author':user, 'body':'Test post #1'},
         {'author':user, 'body':'Test post #2'},
     ]
-    return render_template('user.html', user=user, posts=posts)
+    return render_template('user.html', user=user, posts=posts, form=form)
 
 #edit user profile
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -100,4 +110,59 @@ def edit_profile():
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
+
+
+#follow a user
+@app.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+    form = EmptyForms
+    if form.validate_on_submit():
+        user = db.session.scalars(
+            sa.select(User).where(User.username == username))
+        if user is None:
+            flash(f"User {username} not found.")
+            return redirect(url_for('index'))
+        if user == current_user:
+            flash("You cannot follow yourself!")
+            return redirect(url_for("user", username=username))
+        current_user.follow(user)
+        db.session.commit()
+        flash(f"You are following {username}!")
+        return redirect(url_for("user", username=username))
+    else:
+        return redirect(url_for("index"))
+
+
+#unfolow a user
+@app.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    form = EmptyForms()
+    if form.validate_on_submit():
+        user = db.session.scalar(
+            sa.select(User).where(User.username == username))
+        if user is None:
+            flash(f"User {username} not found.")
+            return redirect(url_for('index'))
+        if user == current_user:
+            flash("You cannot unfollow yourself ")
+            return redirect(url_for("user", username=username))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash(f"You are not following {username}.")
+        return redirect(url_for("user", username=username))
+    else:
+        return redirect(url_for("index"))
+    
+
+#explore users view function
+@app.route('/explore')
+@login_required
+def explore():
+    query = sa.select(Post).order_by(Post.timestamp.desc())
+    posts = db.session.scalars(query).all()
+    return render_template("index.html", title="explore", posts=posts)
+    
+
 

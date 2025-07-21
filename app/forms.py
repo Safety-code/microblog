@@ -7,6 +7,7 @@ from app import db
 from app.models import User
 
 
+
 #login form
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -52,6 +53,17 @@ class EditProfileForm(FlaskForm):
             user = db.session.scalar(sa.select(User).where(User.username == username.data))
         if User is not None:
             raise ValidationError("Please use a different username.")
+        
+#follow and unfollow forms
+class EmptyForms(FlaskForm):
+    submit = SubmitField('Submit')
+
+
+#blog post form
+class PostForm(FlaskForm):
+    post = TextAreaField("Say something", validators=[DataRequired(), Length(min=1, max=150)])
+    Submit = SubmitField("submit")
+
 
 
     
