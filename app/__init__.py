@@ -8,6 +8,7 @@ import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 

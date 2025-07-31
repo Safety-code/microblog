@@ -62,7 +62,7 @@ class EmptyForms(FlaskForm):
 #blog post form
 class PostForm(FlaskForm):
     post = TextAreaField("Say something", validators=[DataRequired(), Length(min=1, max=150)])
-    Submit = SubmitField("submit")
+    submit = SubmitField("Submit")
 
 
 

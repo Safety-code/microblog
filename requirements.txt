@@ -1,9 +1,12 @@
- install flask
- install "flask<3" "werkzeug<3"
- install python-dotenv
- install flask-wtf
- install flask-sqlalchemy
- install flask-migrate
- install flask-login
- install email-validator
- install aiosmtpd
+pip:    
+install flask
+install "flask<3" "werkzeug<3"
+install python-dotenv
+install flask-wtf
+install flask-sqlalchemy
+install flask-migrate
+install flask-login
+install email-validator
+install aiosmtpd
+install flask-mail
+install pyjwt 

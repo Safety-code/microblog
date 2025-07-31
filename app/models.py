@@ -38,10 +38,7 @@ class User(UserMixin, db.Model):
         secondary=followers, primaryjoin=(followers.c.followed_id == id),
         secondaryjoin=(followers.c.follower_id == id),
         back_populates='following')
-    
-    def follow(self, user):
-        if not self.is_following(user):
-            self.following.add(user)
+   
 
     def unfollow(self, user):
         if self.is_following(user):
@@ -50,6 +47,10 @@ class User(UserMixin, db.Model):
     def is_following(self, user):
         query = self.following.select().where(User.id == user.id)
         return db.session.scalar(query) is not None
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.following.add(user)
 
     def followers_count(self):
         query = sa.select(sa.func.count()).select_from(
