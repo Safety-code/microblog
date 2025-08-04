@@ -7,6 +7,9 @@ from app import db
 from flask_login import UserMixin
 from app import login
 from hashlib import md5
+from time import time
+import jwt
+from app import app
 
 
 #followers association table
@@ -39,6 +42,22 @@ class User(UserMixin, db.Model):
         secondaryjoin=(followers.c.follower_id == id),
         back_populates='following')
    
+   #reset password token method
+    def get_reset_password_token(self, expires_in=600):
+            return jwt.encode(
+                {'reset_password': self.id, 'exp':time() + expires_in},
+                app.config['SECRET_KEY'], algorithm='HS256')
+
+    #password token verification
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])['reset password']
+        except:
+            return None
+        return db.session.get(User, id)
+
+
 
     def unfollow(self, user):
         if self.is_following(user):

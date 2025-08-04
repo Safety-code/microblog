@@ -6,6 +6,7 @@ from flask_login import LoginManager
 import logging
 import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
+from flask_mail import Mail
 
 
 
@@ -49,6 +50,9 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.setLevel(logging.ERROR)
     app.logger.info('Micrblog startup')
+
+#flask-mail config
+mail = Mail(app)
 
 
 from app import routes, models, errors
